@@ -8,16 +8,12 @@ st.set_page_config(
     layout="centered",
 )
 
-# --- Header with emoji and subtitle ---
 st.title("✨ Semantyl ✨")
-st.markdown(
-    """
-    Welcome to **Semantyl** — your intelligent document question-answering assistant powered by Semantic Search and RAG.  
-    Upload your documents, ask questions, and get precise, grounded answers from your own data. 🚀
-    """
-)
+st.markdown("""
+Welcome to **Semantyl** — your intelligent document question-answering assistant powered by Semantic Search and RAG.  
+Upload your documents, ask questions, and get precise, grounded answers from your own data. 🚀
+""")
 
-# Use a container for uploader with a clear section header
 with st.container():
     st.subheader("📂 Upload your files")
     uploaded_files = st.file_uploader(
@@ -42,15 +38,17 @@ if uploaded_files:
             st.session_state.file_ids = current_file_ids
         st.success("Documents processed successfully!")
 
-# Query input with submit button side by side
-query_col, btn_col = st.columns([4, 1])
-with query_col:
+# Create columns: one for input, one for button
+input_col, btn_col = st.columns([5, 1])
+
+with input_col:
     query = st.text_input("❓ Enter your query here...")
 
 with btn_col:
+    # Add some padding above the button to vertically center it with input box
+    st.write("")  # empty write adds some vertical space
     ask = st.button("Ask")
 
-# When user submits query
 if ask:
     if not query:
         st.warning("⚠️ Please enter a question before submitting.")
