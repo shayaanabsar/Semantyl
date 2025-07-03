@@ -2,6 +2,8 @@
 
 **Semantyl** is an intelligent document question-answering assistant powered by **semantic search** and **RAG (Retrieval-Augmented Generation)**. Upload documents like PDFs, TXT, and DOCX files, ask natural language questions, and get precise, grounded answers from your own content.
 
+[Semantyl](https://semantyl.streamlit.app/)
+
 ---
 
 ## 🚀 Features
