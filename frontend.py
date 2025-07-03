@@ -2,6 +2,11 @@ import streamlit as st
 from file_converter import *
 from backend import *
 
+st.set_page_config(
+	page_title="Semantyl",
+	page_icon="✨",
+)
+
 st.title('✨ Semantyl ✨')
 st.write("""
 Welcome to **Semantyl** — your intelligent document question-answering assistant powered by Semantic Search and Retrieval-Augmented Generation (RAG).  
