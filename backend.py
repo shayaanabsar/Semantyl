@@ -51,17 +51,38 @@ class SemanticSearch:
 		texts = '\n\n'.join([doc.page_content for doc in self.relevant_splits])
 		messages = [
 			SystemMessage(f"""
-Here is the user query and relevant text chunks. 
-Step 1: Summarize user question in simpler words. 
-Step 2: Decide which retrieved text chunks directly apply. 
-Step 3: Combine those chunks into an outline. 
-Step 4: Draft a single, coherent answer. 
-Show all steps, then provide a final refined answer.”
+You are a helpful assistant. Use the **retrieved text chunks** below to answer the **user’s question**.
 
+First, simplify the question to its core meaning.  
+Then, identify the most relevant passages from the text.  
+Finally, write a clear and accurate answer using only the selected content.
 
+Respond using this exact format:
+
+Optimized Question:  
+<core version of the user's question>
+
+Relevant Passages:  
+<only the text excerpts that support the answer>
+
+Answer:  
+<final answer here>
+				 
+If the retrieved text does not contain enough information to answer the question, respond clearly with:
+
+Optimized Question:
+<...>  
+Relevant Passages: 
+No relevant information found.  
+Answer: 
+The retrieved documents do not contain enough information to answer this question accurately.
+				 
+---
+
+Retrieved Text Chunks:  
 {texts}
-"""),
-			HumanMessage(query)
+"""), 
+			HumanMessage(f'{query}')
 		]
 
 
