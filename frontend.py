@@ -2,99 +2,96 @@ import streamlit as st
 from file_converter import *
 from backend import *
 
-# Page config with wider layout for a cleaner look
 st.set_page_config(
-    page_title="✨ Semantyl",
+    page_title="Semantyl",
     page_icon="✨",
-    layout="wide",
-    initial_sidebar_state="expanded"
+    layout="centered",
 )
 
-# Custom CSS for styling enhancements
+# --- Custom CSS for subtle styling ---
 st.markdown("""
 <style>
+    /* Page background and container */
+    .main {
+        background-color: #fafafa;
+        padding: 2rem 1.5rem;
+        max-width: 700px;
+        margin: auto;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgb(0 0 0 / 0.05);
+    }
     /* Title styling */
     .title {
-        font-size: 3.2rem;
-        font-weight: 900;
-        color: #7f00ff;
+        font-weight: 800;
+        font-size: 2.8rem;
+        color: #5b2eeb;
         text-align: center;
-        margin-bottom: 0;
+        margin-bottom: 0.2rem;
     }
-    /* Subtitle paragraph styling */
+    /* Subtitle styling */
     .subtitle {
-        font-size: 1.3rem;
-        font-weight: 500;
-        color: #4a4a4a;
+        font-size: 1.1rem;
+        color: #555555;
         text-align: center;
-        margin-top: 0.2rem;
         margin-bottom: 2rem;
+        line-height: 1.4;
     }
-    /* Custom button style */
-    div.stButton > button {
-        background: linear-gradient(90deg, #7f00ff, #e100ff);
-        color: white;
-        font-weight: bold;
-        padding: 0.6rem 2rem;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(127, 0, 255, 0.3);
-        transition: background 0.3s ease;
-    }
-    div.stButton > button:hover {
-        background: linear-gradient(90deg, #e100ff, #7f00ff);
-        box-shadow: 0 6px 20px rgba(225, 0, 255, 0.6);
-    }
-    /* File uploader style */
-    .stFileUploader > label {
-        font-weight: 700;
-        font-size: 1.1rem;
-        color: #7f00ff;
-    }
-    /* Input box customization */
+    /* Styled text input */
     div.stTextInput > label {
-        font-weight: 700;
-        color: #7f00ff;
+        font-weight: 600;
+        color: #5b2eeb;
         font-size: 1.1rem;
+        margin-bottom: 0.4rem;
     }
-    /* Response markdown styling */
-    .response {
-        background-color: #f8f1ff;
-        padding: 1rem 1.5rem;
-        border-radius: 15px;
-        box-shadow: 0 0 10px #d7bfff;
+    /* File uploader label */
+    div.stFileUploader > label {
+        font-weight: 600;
+        color: #5b2eeb;
+        font-size: 1.1rem;
+        margin-bottom: 0.6rem;
+    }
+    /* Response box */
+    .response-box {
+        background: #fff;
+        border-radius: 10px;
+        padding: 1.2rem 1.5rem;
+        box-shadow: 0 0 15px rgba(91, 46, 235, 0.15);
+        color: #333;
         font-size: 1.05rem;
         line-height: 1.5;
         white-space: pre-wrap;
-        margin-top: 1rem;
+        margin-top: 1.6rem;
+        border: 1px solid #ddd;
+    }
+    /* Success message styling */
+    div.stAlertSuccess {
+        border-radius: 10px;
+        font-weight: 600;
+        color: #317a00;
+        background-color: #dbf5c6;
+        border: 1px solid #a7d233;
+        padding: 0.8rem 1rem;
+        margin-bottom: 1rem;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# Page Header
+# Wrap all content inside a div for styling container
+st.markdown('<div class="main">', unsafe_allow_html=True)
+
+# Title and description
 st.markdown('<h1 class="title">✨ Semantyl ✨</h1>', unsafe_allow_html=True)
 st.markdown(
-    '<p class="subtitle">Welcome to <strong>Semantyl</strong> — your intelligent document question-answering assistant powered by Semantic Search and Retrieval-Augmented Generation (RAG).<br>Upload your documents, ask questions, and get precise, grounded answers from your own data. 🚀</p>',
-    unsafe_allow_html=True
+    '<p class="subtitle">Your intelligent document question-answering assistant powered by Semantic Search and RAG. '
+    'Upload your documents, ask questions, and get precise, grounded answers from your data. 🚀</p>',
+    unsafe_allow_html=True,
 )
 
-# Sidebar with instructions and info
-with st.sidebar:
-    st.header("📖 How to use Semantyl")
-    st.markdown("""
-    1. Upload your documents (PDF, TXT, DOCX).  
-    2. Wait for processing to complete.  
-    3. Enter your question in the input box.  
-    4. Get instant, grounded answers from your data!
-    """)
-    st.markdown("---")
-    st.markdown("**Tip:** Upload multiple files to expand your knowledge base!")
-
-# File uploader with wide layout
+# File uploader
 uploaded_files = st.file_uploader(
-    label='📂 Upload your files here (PDF, TXT, DOCX) for querying',
+    label='📂 Upload your files here (PDF, TXT, DOCX)',
     type=['pdf', 'txt', 'docx'],
     accept_multiple_files=True,
-    key="file_uploader"
 )
 
 def get_file_ids(files):
@@ -105,29 +102,24 @@ if uploaded_files:
     previous_file_ids = st.session_state.get("file_ids")
 
     if current_file_ids != previous_file_ids:
-        with st.spinner('⬆️ Processing your documents, please wait...'):
+        with st.spinner('⬆️ Processing your documents...'):
             files_as_text = read_files(uploaded_files)
             searcher = SemanticSearch(files_as_text)
             searcher.process_files()
             st.session_state.searcher = searcher
             st.session_state.file_ids = current_file_ids
-        st.success("✅ Documents processed successfully!")
+        st.success("Documents processed successfully!")
 
-# Query input with placeholder and submit button side-by-side
-query_col, submit_col = st.columns([4,1])
+# Query input
+query = st.text_input('❓ Enter your query here...')
 
-with query_col:
-    query = st.text_input('❓ Enter your query here...', placeholder="Ask anything about your documents...")
-
-with submit_col:
-    submit = st.button("Ask")
-
-if submit:
-    if not query.strip():
-        st.warning("⚠️ Please enter a question before submitting.")
-    elif "searcher" not in st.session_state:
-        st.warning("⚠️ Please upload one or more documents before submitting a query.")
+# Query handling and response
+if query:
+    if "searcher" not in st.session_state:
+        st.warning("⚠️ Please upload documents before asking a question.")
     else:
-        with st.spinner('🔍 Searching your documents, please wait...'):
+        with st.spinner('🔍 Searching your documents...'):
             response = st.session_state.searcher.produce_output(query)
-            st.markdown(f'<div class="response">{response}</div>', unsafe_allow_html=True)
+            st.markdown(f'<div class="response-box">{response}</div>', unsafe_allow_html=True)
+
+st.markdown('</div>', unsafe_allow_html=True)
