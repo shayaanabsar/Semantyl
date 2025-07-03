@@ -51,12 +51,15 @@ class SemanticSearch:
 		texts = '\n\n'.join([doc.page_content for doc in self.relevant_splits])
 		messages = [
 			SystemMessage(f"""
-You are given the following passages to answer the user’s query.
-If the answer is not found, respond clearly that you cannot provide one.
-Format the answer clearly.
-Note: The formatting of the passages (e.g., formulas) may be imperfect—use your judgment to correct them in Markdown/Latex format.
+Here is the user query and relevant text chunks. 
+Step 1: Summarize user question in simpler words. 
+Step 2: Decide which retrieved text chunks directly apply. 
+Step 3: Combine those chunks into an outline. 
+Step 4: Draft a single, coherent answer. 
+Show all steps, then provide a final refined answer.”
 
-Passages: {texts}
+
+{texts}
 """),
 			HumanMessage(query)
 		]
