@@ -7,6 +7,6 @@ python_docx==1.1.2
 streamlit==1.46.1
 transformers==4.53.0
 sentence-transformers==5.0.0
-langchain==0.3.26
-langchain_cohere==0.1.0
-cohere>=5.3.0,<6.0
+langchain>=0.0.150
+langchain_cohere>=0.2.0
+cohere>=5.7.0,<6.0
