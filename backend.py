@@ -14,7 +14,6 @@ class SemanticSearch:
 		self.db        = None
 		self.hf_embed  = HuggingFaceEmbeddings(
 			model_name="sentence-transformers/all-mpnet-base-v2",
-			model_kwargs={"device":"cpu"}
 		)
 		self.process_files()
 		self.llm       = init_chat_model("command-r-plus", model_provider="cohere")
